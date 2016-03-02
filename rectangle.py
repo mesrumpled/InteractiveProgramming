@@ -2,7 +2,7 @@ import pygame
 from pygame.locals import QUIT, KEYDOWN, MOUSEMOTION
 import time
 
-VALUES = [100, 200, 300, 500, 600, 900]
+STATE_PREGGERS = {'Alabama':[100, 200, 300, 100, 200, 300], 'Utah':[200, 400, 300, 800, 200, 100]}
 SIZE = (1040, 1040)
 
 class Rectangle(object):
@@ -29,11 +29,17 @@ class View(object):
                         self.model.rectangle.width,
                         self.model.rectangle.height)
         pygame.draw.rect(self.screen, pygame.Color('Medium Aquamarine'), r)
+        r2 = pygame.Rect(self.model.rectangle2.left,
+                        self.model.rectangle2.top,
+                        self.model.rectangle2.width,
+                        self.model.rectangle2.height)
+        pygame.draw.rect(self.screen, pygame.Color('Green'), r2)
         pygame.display.update()
 
 class Model(object):
     def __init__(self):
         self.rectangle = Rectangle(150, 900, 50, 50)
+        self.rectangle2 = Rectangle(300, 900, 50, 50)
 
 class MouseController(object):
     def __init__(self, model):
@@ -44,8 +50,10 @@ class MouseController(object):
             return
         else:
             position = pygame.mouse.get_pos()
-            scaled_value = (float(position[0])/SIZE[0])*len(VALUES)
-            self.model.rectangle.height_adjust(-100*int(scaled_value))
+            scaled_value = (float(position[0])/SIZE[0])*len(STATE_PREGGERS['Alabama'])
+            chosen_index = int(scaled_value)
+            self.model.rectangle.height_adjust(-STATE_PREGGERS['Alabama'][chosen_index])
+            self.model.rectangle2.height_adjust(-STATE_PREGGERS['Utah'][chosen_index])
 
 
 if __name__ == '__main__':
