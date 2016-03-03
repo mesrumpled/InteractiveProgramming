@@ -1,10 +1,23 @@
 import pygame
 from pygame.locals import QUIT, KEYDOWN, MOUSEMOTION
 import time
+import csv
 
-STATE_PREGGERS = {'Alabama':[100, 200, 300, 100, 200, 300], 'Utah':[200, 400, 300, 800, 200, 100]}
-STATE_PREGGERS = {'Alabama':[100, 200, 300, 100, 200, 300], 'Utah':[200, 400, 300, 800, 200, 100]}
-VALUES = [100, 200, 300, 500, 600, 900]
+""" This imports and create a dictionary. Each key for each state has a list with rates for each year."""
+with open('CleanedUpData_noyear.csv', 'rb') as f:
+    reader = csv.reader(f)
+
+    STATE_RATES = {}
+    for row in reader:
+        if row[0] in STATE_RATES:
+            STATE_RATES[row[0]].append(row[1])
+        else:
+            STATE_RATES[row[0]] = [row[1]]
+
+
+# STATE_PREGGERS = {'Alabama':[100, 200, 300, 100, 200, 300], 'Utah':[200, 400, 300, 800, 200, 100]}
+# STATE_PREGGERS = {'Alabama':[100, 200, 300, 100, 200, 300], 'Utah':[200, 400, 300, 800, 200, 100]}
+# VALUES = [100, 200, 300, 500, 600, 900]
 SIZE = (1040, 1040)
 
 class Rectangle(object):
@@ -53,10 +66,10 @@ class MouseController(object):
             return
         else:
             position = pygame.mouse.get_pos()
-            scaled_value = (float(position[0])/SIZE[0])*len(STATE_PREGGERS['Alabama'])
+            scaled_value = (float(position[0])/SIZE[0])*len(STATE_RATES['Mississippi'])
             chosen_index = int(scaled_value)
-            self.model.rectangle.height_adjust(-STATE_PREGGERS['Alabama'][chosen_index])
-            self.model.rectangle2.height_adjust(-STATE_PREGGERS['Utah'][chosen_index])
+            self.model.rectangle.height_adjust(-STATE_RATES['Mississippi'][chosen_index])
+            self.model.rectangle2.height_adjust(-STATE_RATES['Utah'][chosen_index])
             scaled_value = (float(position[0])/SIZE[0])*len(VALUES)
             self.model.rectangle.height_adjust(-100*int(scaled_value))
 
