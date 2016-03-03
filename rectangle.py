@@ -3,6 +3,7 @@ from pygame.locals import QUIT, KEYDOWN, MOUSEMOTION
 import time
 
 STATE_PREGGERS = {'Alabama':[100, 200, 300, 100, 200, 300], 'Utah':[200, 400, 300, 800, 200, 100]}
+STATE_PREGGERS = {'Alabama':[100, 200, 300, 100, 200, 300], 'Utah':[200, 400, 300, 800, 200, 100]}
 VALUES = [100, 200, 300, 500, 600, 900]
 SIZE = (1040, 1040)
 
@@ -40,6 +41,7 @@ class View(object):
 class Model(object):
     def __init__(self):
         self.rectangle = Rectangle(150, 900, 50, 50)
+        self.rectangle2 = Rectangle(300, 900, 50, 50)
         self.rectangle2 = Rectangle(300, 900, 50, 50)
 
 class MouseController(object):
