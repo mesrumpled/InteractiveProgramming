@@ -3,6 +3,7 @@ from pygame.locals import QUIT, KEYDOWN, MOUSEMOTION
 import time
 
 STATE_PREGGERS = {'Alabama':[100, 200, 300, 100, 200, 300], 'Utah':[200, 400, 300, 800, 200, 100]}
+VALUES = [100, 200, 300, 500, 600, 900]
 SIZE = (1040, 1040)
 
 class Rectangle(object):
@@ -54,6 +55,8 @@ class MouseController(object):
             chosen_index = int(scaled_value)
             self.model.rectangle.height_adjust(-STATE_PREGGERS['Alabama'][chosen_index])
             self.model.rectangle2.height_adjust(-STATE_PREGGERS['Utah'][chosen_index])
+            scaled_value = (float(position[0])/SIZE[0])*len(VALUES)
+            self.model.rectangle.height_adjust(-100*int(scaled_value))
 
 
 if __name__ == '__main__':
