@@ -15,12 +15,15 @@ with open('CleanedUpData_noyear.csv', 'rb') as f:
         else:
             STATE_RATES[row[0]] = [row[1]]
 
+print STATE_RATES
 
 SIZE = (1040, 1040)
+
 
 STATE_COLORS = {}
 for state in STATE_RATES:
     STATE_COLORS[state] = (0, random.randint (0,100), random.randint (50,255))
+
 
 
 class View(object):
@@ -54,7 +57,7 @@ class MouseController(object):
             for state in STATE_RATES:
                 scaled_value = (float(position[0])/SIZE[0])*len(STATE_RATES[state])
                 chosen_index = int(scaled_value)
-                self.model.states_rect[state].height = (-5*float(STATE_RATES[state][chosen_index]))  # Question about this!!
+                self.model.states_rect[state].height = (-5*float(STATE_RATES[state][chosen_index]))  
 
 
 if __name__ == '__main__':
