@@ -83,6 +83,13 @@ class Model(object):
             self.states_names[state] = freetype.render(STATE_RATES.keys()[i], True, (0, 0, 0))
             self.states_names[state] = pygame.transform.rotate(self.states_names[state], 90)
 
+        # initialize the state values
+        self.states_num = {}
+        for i, state in enumerate(STATE_RATES):
+            self.freetype = pygame.font.SysFont("serif", 18)
+            self.states_num[state] = self.freetype.render("-", True, (0, 0, 0))
+
+
         
     def update(self, position):
         """updates rectangle dimensions and labels based on the controller position"""
@@ -98,12 +105,10 @@ class Model(object):
         self.year = freetypeY.render(p, True, (0, 0, 0))
 
         # Shows the current rate for each state
-        self.states_num = {}
-        for i, state in enumerate(STATE_RATES):
-            freetype = pygame.font.SysFont("serif", 18)
+        for state in self.states_num: #freetype = pygame.font.SysFont("serif", 18)
             pos = STATE_RATES[state][chosen_index]
             val = int(float(pos))
-            self.states_num[state] = freetype.render(str(val), True, (0, 0, 0))
+            self.states_num[state] = self.freetype.render(str(val), True, (0, 0, 0))
 
 
         
