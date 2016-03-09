@@ -9,6 +9,7 @@ from pygame.locals import QUIT, KEYDOWN, MOUSEMOTION
 import time
 import csv
 import random
+import collections
    
 
 def generate_rates(f):
@@ -39,12 +40,14 @@ def generate_colors(d):
     return colors
 
 
-STATE_RATES = generate_rates('CleanedUpData_noyear.csv')
+STATE_RATES = collections.OrderedDict(sorted(generate_rates('CleanedUpData_noyear.csv').items()))
+print STATE_RATES
 
 SIZE = (1700, 1040)
 
-STATE_COLORS = generate_colors(STATE_RATES)
 
+STATE_COLORS = collections.OrderedDict(sorted(generate_colors(STATE_RATES).items()))
+print STATE_COLORS
 
 
 class View(object):
@@ -68,7 +71,11 @@ class View(object):
 
         for i, state in enumerate(model.states_num):
             self.screen.blit(model.states_num[state], ((i*(SIZE[0]/50.0) + 8, 615)))
+
+        self.screen.blit(model.surprise, (0,0))
         pygame.display.update()
+
+
 
 
 
@@ -79,6 +86,7 @@ class Model(object):
         self.states_rect = {}
         for i, state in enumerate(STATE_RATES):
             self.states_rect[state] = pygame.Rect(i*(SIZE[0]/50.0) + 8, 600, (SIZE[0]/50.0-16), 0)
+        self.states_rect = collections.OrderedDict(sorted(self.states_rect.items()))
 
         # initialize the title
         freetypeT = pygame.font.SysFont("serif", 54)
@@ -90,12 +98,24 @@ class Model(object):
             freetype = pygame.font.SysFont("serif", 24)
             self.states_names[state] = freetype.render(STATE_RATES.keys()[i], True, (0, 0, 0))
             self.states_names[state] = pygame.transform.rotate(self.states_names[state], 90)
+        self.states_names = collections.OrderedDict(sorted(self.states_names.items()))
 
         # initialize the state values
         self.states_num = {}
         for i, state in enumerate(STATE_RATES):
             self.freetype = pygame.font.SysFont("serif", 18)
             self.states_num[state] = self.freetype.render("-", True, (0, 0, 0))
+        self.states_num = collections.OrderedDict(sorted(self.states_num.items()))
+
+        # initializes the year
+        freetypeY = pygame.font.SysFont("serif", 38)
+        p = ""
+        self.year = freetypeY.render(p, True, (0, 0, 0))
+
+        # initializes the surpirse text
+        freetypeS = pygame.font.SysFont("comicsansms", 20)
+        self.surprise = freetypeS.render("", True, (0, 0, 0))
+
 
 
         
@@ -116,7 +136,12 @@ class Model(object):
             pos = STATE_RATES[state][chosen_index]
             val = int(float(pos))
             self.states_num[state] = self.freetype.render(str(val), True, (0, 0, 0))
-
+        
+        # Is a surpirse!
+        if position == (0, 0):
+            freetypeS = pygame.font.SysFont("comicsansms", 30)
+            self.surprise = freetypeS.render("yay birth control", True, (0, 255, 0))
+            
 
         
 class MouseController(object):
