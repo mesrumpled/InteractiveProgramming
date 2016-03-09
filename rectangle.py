@@ -12,7 +12,9 @@ import random
    
 
 def generate_rates(f):
-    """Generates a dictionary containing the rates for each element in the data set"""
+    """Takes a csv file with one column of states and the other of the rates for each
+    state. It takes this file and then maps each state to a single key and the rates
+    into a list that is the value for each state key"""
     with open(f, 'rb') as f:
         reader = csv.reader(f)
         rates = {}
@@ -25,10 +27,15 @@ def generate_rates(f):
 
 
 def generate_colors(d):
-    """Generates a color for each element in the data set"""
+    """Generates a color for each element in the data set by iterating through the
+    number of keys and mapping that value onto the rgb scale. The rgb functions were
+    chosen through trial and error"""
     colors = {}
-    for s in d:
-        colors[s] = (random.randint (2,255), random.randint (2,255), random.randint (2,255))
+    for index, state in enumerate(d.iterkeys()):
+    # for state,index in d.iteritems():
+        #print index
+        colors[state] = ((index*255)/51, (index*200)/51, 200)
+        #print (index*100)/51
     return colors
 
 
@@ -41,7 +48,7 @@ STATE_COLORS = generate_colors(STATE_RATES)
 
 
 class View(object):
-    """visualizes the data and labels"""
+    """visualizes the data on the screan and creates labels for each bar in the bar graph"""
     def __init__(self, model, screen):
         """initializes the model class and screen surface"""
         self.model = model
@@ -66,8 +73,9 @@ class View(object):
 
 
 class Model(object):
+    """stores the state of the visualization for each year and updates the year and
+    resulting visualization as the mouse moves across the screen"""
     def __init__(self):
-        """initializes the data objects, title and state names"""
         self.states_rect = {}
         for i, state in enumerate(STATE_RATES):
             self.states_rect[state] = pygame.Rect(i*(SIZE[0]/50.0) + 8, 600, (SIZE[0]/50.0-16), 0)
@@ -93,7 +101,6 @@ class Model(object):
         
     def update(self, position):
         """updates rectangle dimensions and labels based on the controller position"""
-        # Update all model attributes based on the position of the mouse
         for state in STATE_RATES:
                 scaled_value = (float(position[0])/SIZE[0])*len(STATE_RATES[state])
                 chosen_index = int(scaled_value)
