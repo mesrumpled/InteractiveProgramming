@@ -33,17 +33,14 @@ def generate_colors(d):
     chosen through trial and error"""
     colors = {}
     for index, state in enumerate(d.iterkeys()):
-    # for state,index in d.iteritems():
-        #print index
         colors[state] = ((index*255)/51, (index*200)/51, 200)
-        #print (index*100)/51
     return colors
 
-
+# Dictionary containing csv data
 STATE_RATES = collections.OrderedDict(sorted(generate_rates('CleanedUpData_noyear.csv').items()))
-
+# Size of the visualization screen
 SIZE = (1700, 1040)
-
+# Dictionary containing colors generated for each data object
 STATE_COLORS = collections.OrderedDict(sorted(generate_colors(STATE_RATES).items()))
 
 
@@ -57,19 +54,21 @@ class View(object):
     def draw(self):
         """draws rectangles and labels"""
         self.screen.fill(pygame.Color('white'))
+
         for state in self.model.states_rect:
-            pygame.draw.rect(self.screen, pygame.Color(*STATE_COLORS[state]), self.model.states_rect[state])
-    
-        self.screen.blit(model.title, (SIZE[0]/1.8,SIZE[1]/17))
-        self.screen.blit(model.year, (SIZE[0]/1.1,SIZE[1]/8))
+            pygame.draw.rect(self.screen, pygame.Color(*STATE_COLORS[state]), self.model.states_rect[state])    # Draws a bar for each data object
 
         for i, state in enumerate(model.states_names):
-            self.screen.blit(model.states_names[state], (i*(SIZE[0]/50.0), 650))
+            self.screen.blit(model.states_names[state], (i*(SIZE[0]/50.0), 650))    # Adds a label for each data object
 
         for i, state in enumerate(model.states_num):
-            self.screen.blit(model.states_num[state], ((i*(SIZE[0]/50.0) + 8, 615)))
+            self.screen.blit(model.states_num[state], ((i*(SIZE[0]/50.0) + 8, 615)))    # Adds the value for each object
 
+
+        self.screen.blit(model.title, (SIZE[0]/1.8,SIZE[1]/17))
+        self.screen.blit(model.year, (SIZE[0]/1.1,SIZE[1]/8))
         self.screen.blit(model.surprise, (0,0))
+
         pygame.display.update()
 
 
@@ -77,10 +76,10 @@ class Model(object):
     """stores the state of the visualization for each year and updates the year and
     resulting visualization as the mouse moves across the screen"""
     def __init__(self):
-        self.states_rect = {}
+        self.states_rect = {}   # Initializes a dictionary to be filled with rectangle objects
         for i, state in enumerate(STATE_RATES):
-            self.states_rect[state] = pygame.Rect(i*(SIZE[0]/50.0) + 8, 600, (SIZE[0]/50.0-16), 0)
-        self.states_rect = collections.OrderedDict(sorted(self.states_rect.items()))
+            self.states_rect[state] = pygame.Rect(i*(SIZE[0]/50.0) + 8, 600, (SIZE[0]/50.0-16), 0)   
+        self.states_rect = collections.OrderedDict(sorted(self.states_rect.items()))    # Sorts the dictionary alphabetically after initialization 
 
         # initialize the title
         freetypeT = pygame.font.SysFont("serif", 54)
@@ -113,10 +112,11 @@ class Model(object):
         
     def update(self, position):
         """updates rectangle dimensions and labels based on the controller position"""
+
         for state in STATE_RATES:
                 scaled_value = (float(position[0])/SIZE[0])*len(STATE_RATES[state])
                 chosen_index = int(scaled_value)
-                self.states_rect[state].height = (-5*float(STATE_RATES[state][chosen_index]))
+                self.states_rect[state].height = (-5*float(STATE_RATES[state][chosen_index]))   # Updates each bar height based on position of the controller
 
         # Shows the current year 
         freetypeY = pygame.font.SysFont("serif", 38)
@@ -124,15 +124,14 @@ class Model(object):
         self.year = freetypeY.render(p, True, (0, 0, 0))
 
         # Shows the current rate for each state
-        for state in self.states_num: #freetype = pygame.font.SysFont("serif", 18)
+        for state in self.states_num: 
             pos = STATE_RATES[state][chosen_index]
             val = int(float(pos))
-            self.states_num[state] = self.freetype.render(str(val), True, (0, 0, 0))
+            self.states_num[state] = self.freetype.render(str(val), True, (0, 0, 0))    # Updates each rate value based on position of the controller
         
-        # Is a surprise!
         if position == (0, 0):
             freetypeS = pygame.font.SysFont("comicsansms", 30)
-            self.surprise = freetypeS.render("yay birth control", True, (0, 255, 0))
+            self.surprise = freetypeS.render("yay birth control", True, (0, 255, 0))    # If the controller lands in the correct location display suprise text
             
 
         
@@ -147,7 +146,7 @@ class MouseController(object):
             return
         else:
             position = pygame.mouse.get_pos()
-            self.model.update(position)
+            self.model.update(position) # Update bar heights and labels in the Model class
 
               
 
