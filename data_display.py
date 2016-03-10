@@ -41,13 +41,10 @@ def generate_colors(d):
 
 
 STATE_RATES = collections.OrderedDict(sorted(generate_rates('CleanedUpData_noyear.csv').items()))
-print STATE_RATES
 
 SIZE = (1700, 1040)
 
-
 STATE_COLORS = collections.OrderedDict(sorted(generate_colors(STATE_RATES).items()))
-print STATE_COLORS
 
 
 class View(object):
@@ -74,9 +71,6 @@ class View(object):
 
         self.screen.blit(model.surprise, (0,0))
         pygame.display.update()
-
-
-
 
 
 class Model(object):
@@ -115,8 +109,6 @@ class Model(object):
         # initializes the surpirse text
         freetypeS = pygame.font.SysFont("comicsansms", 20)
         self.surprise = freetypeS.render("", True, (0, 0, 0))
-
-
 
         
     def update(self, position):
